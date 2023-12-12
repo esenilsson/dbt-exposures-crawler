@@ -25,8 +25,8 @@ class DbtExposure:
     ):
         # To guarantee that exposure names are unique, we append the first 3 characters of the
         # Tableau internal id (UUID) instead of just using the workbook name
-        workbook_name_safe = slugify(workbook.name, separator='_')
-        name = f'tableau_{workbook_name_safe}_{workbook.id[0:3]}'
+        workbook_name_safe = slugify(workbook.name, separator=' ')
+        name = f'{workbook_name_safe} ({workbook.id[0:3]})'.title()
 
         '''
         Links coming from the Tableau API will be in the shape of
@@ -38,7 +38,8 @@ class DbtExposure:
         url = re.sub(r'(https?:\/\/.*?)\/', os.environ['TABLEAU_URL'] + '/', workbook.webpage_url)
 
         description = '''
-        # {project} / {name}
+        ## {name}
+        ### {project} 
         {description} \n
 
         **Access**: [Link to Tableau]({url})
@@ -46,8 +47,8 @@ class DbtExposure:
         **Created at**: {created_at}\n
         **Last updated at**: {updated_at}
         '''.format(
-            project=workbook.project_name,
             name=workbook.name,
+            project=workbook.project_name,
             description=workbook.description or '*no description*',
             updated_at=workbook.updated_at,
             created_at=workbook.created_at,
