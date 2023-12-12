@@ -23,8 +23,8 @@ def _should_ignore_workbook(workbook, projects_to_ignore: Collection[str]) -> bo
     # by workbooks under projects without a name.
     if not workbook.project_name:
         return True
-    
-    return workbook.project_name in projects_to_ignore
+
+    return workbook.project_name in projects_to_ignore or 'sandbox' in workbook.project_name.lower()
 
 
 def _parse_tables_from_sql(workbooks_sqls: WorkbookModelsMapping, models) -> WorkbookModelsMapping:
